@@ -1,6 +1,5 @@
 package org.acme;
 
-import io.smallrye.common.annotation.Blocking;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -19,15 +18,10 @@ public class ChatResource {
     }
 
     @POST
-    @Blocking
+//    @Blocking
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public String chat(String question) {
-        try {
-            return bot.chat(question);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "AI Error: " + e.getMessage();
-        }
+        return bot.chat(question);
     }
 }

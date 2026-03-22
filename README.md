@@ -86,16 +86,18 @@ Add it to a Rest endpoint:
 
 In a more complete example, you would have a web interface and use websockets that would provide more interactive experience, see [ChatBot Easy RAG Sample](https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples/chatbot-easy-rag) for such an example.
 
-** Azure Deployment **
+## Azure Deployment
 
-az login --tenant 0cc6383b-58a0-4562-9cea-32ea03e49f91
-az group create --name quarkus-bot-rg-brazil --location brazilsouth
-az storage account create --name jhonatanbotbr332 --resource-group quarkus-bot-rg-brazil --sku Standard_LRS --location brazilsouth
-az functionapp create --resource-group quarkus-bot-rg-brazil --name ai-quarkus-bot-br --storage-account jhonatanbotbr332 --consumption-plan-location brazilsouth --os-type Linux --runtime java --runtime-version 21 --functions-version 4
+```java
+    az login --tenant <TENANT-ID>
+    az group create --name quarkus-bot-rg-brazil --location brazilsouth
+    az storage account create --name jhonatanbotbr332 --resource-group quarkus-bot-rg-brazil --sku Standard_LRS --location brazilsouth
+    az functionapp create --resource-group quarkus-bot-rg-brazil --name ai-quarkus-bot-br --storage-account jhonatanbotbr332 --consumption-plan-location brazilsouth --os-type Linux --runtime java --runtime-version 21 --functions-version 4
 
-Test
+    mvn clean package quarkus:deploy
+```
+
+### Test
+```java
 curl -X POST https://ai-quarkus-bot-br.azurewebsites.net/api/chat -H "Content-Type: text/plain" -d "Hello Bob, what is your name and what do you do?"
-
-Fixes
-az functionapp config appsettings set --name ai-quarkus-bot-br --resource-group quarkus-bot-rg-brazil --settings FUNCTIONS_WORKER_INIT_TIMEOUT=00:10:00
-az functionapp config appsettings set --name ai-quarkus-bot-br --resource-group quarkus-bot-rg-brazil --settings "JAVA_OPTS=-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -noverify"
+```

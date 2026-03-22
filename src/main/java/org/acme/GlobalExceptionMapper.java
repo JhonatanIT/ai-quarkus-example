@@ -9,8 +9,6 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Override
     public Response toResponse(Throwable t) {
-        // This catches EVERYTHING: standard Exceptions, CDI failures, and fatal Java Errors
-        t.printStackTrace();
         return Response.status(500)
                 .entity("CRITICAL_FAILURE: " + t.getClass().getName() + " \nMessage: " + t.getMessage())
                 .build();
