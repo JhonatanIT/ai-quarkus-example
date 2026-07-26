@@ -95,6 +95,8 @@ In a more complete example, you would have a web interface and use websockets th
     az functionapp create --resource-group quarkus-bot-rg-brazil --name ai-quarkus-bot-br --storage-account jhonatanbotbr332 --consumption-plan-location brazilsouth --os-type Linux --runtime java --runtime-version 21 --functions-version 4
 
     mvn clean package quarkus:deploy
+    cd D:\Courses\Java\ai-quarkus-example 
+    .\deploy.ps1
 ```
 ### Test
 ```java
