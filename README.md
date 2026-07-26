@@ -96,8 +96,7 @@ In a more complete example, you would have a web interface and use websockets th
 
     mvn clean package quarkus:deploy
 ```
-
 ### Test
 ```java
-curl -X POST https://ai-quarkus-bot-br.azurewebsites.net/api/chat -H "Content-Type: text/plain" -d "Hello Bob, what is your name and what do you do?"
+curl -X POST https://ai-quarkus-bot-br-flex.azurewebsites.net/api/chat -H "Content-Type: text/plain" -d "Hello Bob, what is your name and what do you do?"
 ```
