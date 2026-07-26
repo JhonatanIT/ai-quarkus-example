@@ -1,4 +1,5 @@
-$projectPath = "D:\Courses\Java\ai-quarkus-example"
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$projectPath = (Resolve-Path $scriptDir).Path
 $resourceGroup = "quarkus-bot-rg-brazil"
 $functionApp = "ai-quarkus-bot-br-flex"
 
@@ -15,7 +16,32 @@ if (Test-Path $zipPath) {
     Remove-Item $zipPath -Force
 }
 
-Compress-Archive -Path (Join-Path $packageDir "*") -DestinationPath $zipPath -Force
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$zip = [System.IO.Compression.ZipFile]::Open($zipPath, [System.IO.Compression.ZipArchiveMode]::Create)
+try {
+    $files = Get-ChildItem -LiteralPath $packageDir -Recurse -File
+    foreach ($file in $files) {
+        $relativePath = $file.FullName.Substring($packageDir.Length).TrimStart('\', '/')
+        $relativePath = $relativePath.Replace('\\', '/').Replace('\', '/')
+        $entry = $zip.CreateEntry($relativePath)
+        $entryStream = $entry.Open()
+        try {
+            $sourceStream = [System.IO.File]::OpenRead($file.FullName)
+            try {
+                $sourceStream.CopyTo($entryStream)
+            }
+            finally {
+                $sourceStream.Dispose()
+            }
+        }
+        finally {
+            $entryStream.Dispose()
+        }
+    }
+}
+finally {
+    $zip.Dispose()
+}
 
 Write-Host "Deploying to Azure Function App..." -ForegroundColor Cyan
 az functionapp deployment source config-zip `

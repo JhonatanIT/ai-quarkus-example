@@ -86,19 +86,31 @@ Add it to a Rest endpoint:
 
 In a more complete example, you would have a web interface and use websockets that would provide more interactive experience, see [ChatBot Easy RAG Sample](https://github.com/quarkiverse/quarkus-langchain4j/tree/main/samples/chatbot-easy-rag) for such an example.
 
+## Azure Pre Configuration
+
+```powershell
+az login --tenant <TENANT_ID>
+az group create --name quarkus-bot-rg-brazil --location brazilsouth
+az storage account create --name jhonatanbotbr332 --resource-group quarkus-bot-rg-brazil --sku Standard_LRS --location brazilsouth
+```
+
+If you already have the resource group and storage account, you can skip the creation commands and just ensure the Function App exists in the same resource group.
+
 ## Azure Deployment
 
-```java
-    az login --tenant <TENANT-ID>
-    az group create --name quarkus-bot-rg-brazil --location brazilsouth
-    az storage account create --name jhonatanbotbr332 --resource-group quarkus-bot-rg-brazil --sku Standard_LRS --location brazilsouth
-    az functionapp create --resource-group quarkus-bot-rg-brazil --name ai-quarkus-bot-br --storage-account jhonatanbotbr332 --consumption-plan-location brazilsouth --os-type Linux --runtime java --runtime-version 21 --functions-version 4
+The current deployment target is the Flex Consumption Function App:
 
-    mvn clean package quarkus:deploy
-    cd D:\Courses\Java\ai-quarkus-example 
-    .\deploy.ps1
+```powershell
+./deploy.ps1
 ```
+
+The script builds the Quarkus app, creates the deployment zip package for the Azure Functions output, and publishes it to:
+
+- Function App: `ai-quarkus-bot-br-flex`
+- Resource Group: `quarkus-bot-rg-brazil`
+
 ### Test
-```java
+
+```powershell
 curl -X POST https://ai-quarkus-bot-br-flex.azurewebsites.net/api/chat -H "Content-Type: text/plain" -d "Hello Bob, what is your name and what do you do?"
 ```
